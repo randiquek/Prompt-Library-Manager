@@ -41,6 +41,8 @@ Prompt Library Manager helps you store, organize, and manage your collection of 
 - RESTful API  
 - Modern React UI  
 
+# In Progress
+- Frontend with React still needs to be built and customized from default Vite configs
 
 ---
 
