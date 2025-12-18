@@ -25,6 +25,7 @@ func GetAllPrompts(w http.ResponseWriter, r *http.Request) {
 	rows, err := database.DB.Query(`
 	SELECT id, title, content, category, created_at, updated_at
 	FROM prompts
+	WHERE deleted_at IS NULL
 	ORDER BY created_at DESC
 	`)
 	if err != nil {
@@ -187,8 +188,11 @@ func DeletePrompt(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Delete from Database
-	result, err := database.DB.Exec("DELETE FROM prompts WHERE id = ?", id)
+	// Delete from Database (Soft delete)
+	result, err := database.DB.Exec(`
+	UPDATE prompts 
+	SET deleted_at = CURRENT_TIMESTAMP 
+	WHERE id = ? AND deleted_at IS NULL`, id)
 	if err != nil {
 		log.Println("Error deleting prompt:", err)
 		http.Error(w, "Failed to delete prompt", http.StatusInternalServerError)
@@ -211,7 +215,7 @@ func DeletePrompt(w http.ResponseWriter, r *http.Request) {
 	username := r.Context().Value("username").(string)
 
 	// TODO: Add audit log
-	database.LogAudit(username, "DELETE", parseID(id), title, "")
+	database.LogAudit(username, "SOFT_DELETE", parseID(id), title, "Marked as deleted")
 
 	// Return success
 	w.Header().Set("Content-Type", "application/json")

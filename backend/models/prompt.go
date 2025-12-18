@@ -12,6 +12,7 @@ type Prompt struct {
 	Category string `json:"category"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 }
 
 // Struct used when creating/updating prompts (no ID or timestamps)

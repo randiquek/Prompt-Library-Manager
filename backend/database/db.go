@@ -37,7 +37,8 @@ func createTables() {
 	content TEXT NOT NULL,
 	category TEXT,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	deleted_at DATETIME
 	);`
 
 	_, err := DB.Exec(promptsTable)
